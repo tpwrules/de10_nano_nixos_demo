@@ -13,6 +13,8 @@ soc_system/
 *.pin
 *.sof
 *.pof
+*.jic
+*.map
 *.txt
 *.sld
 *.csv
