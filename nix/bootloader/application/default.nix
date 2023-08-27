@@ -30,8 +30,8 @@ stdenv.mkDerivation {
   installPhase = ''
     runHook preInstall
 
-    mkdir -p $out/bin
-    cp HPS_FPGA_LED $out/bin
+    mkdir -p $out/
+    cp hps_boot_memory.hex $out/
 
     runHook postInstall
   '';

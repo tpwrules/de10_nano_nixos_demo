@@ -2,6 +2,7 @@
 , lib
 , quartus-prime-lite
 , soc_system
+, application
 }:
 
 stdenvNoCC.mkDerivation {
@@ -26,6 +27,7 @@ stdenvNoCC.mkDerivation {
   buildPhase = ''
     runHook preBuild
 
+    cp ${application}/*.hex soc_system/synthesis/submodules/soc_system_hps_boot_memory.hex
     ${quartus-prime-lite}/bin/quartus_sh --flow compile *.qpf
 
     runHook postBuild
