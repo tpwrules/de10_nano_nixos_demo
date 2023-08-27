@@ -11,9 +11,21 @@ let
     defconfig = "socfpga_de10_nano_defconfig";
     filesToInstall = ["u-boot-with-spl.sfp"];
     # automatically boot by default
+    # and boot from the memory-mapped NOR flash
+    # and disable environment saving as we don't have flash write tested yet
     extraConfig = ''
       CONFIG_USE_BOOTCOMMAND=y
+
+      CONFIG_SPL_MMC=n
+      CONFIG_SPL_NOR_SUPPORT=y
+      CONFIG_SPL_LEGACY_IMAGE_FORMAT=y
+
+      CONFIG_ENV_IS_IN_MMC=n
+      CONFIG_ENV_IS_NOWHERE=y
     '';
+    extraPatches = [
+      ./u-boot-spl-nor.patch # needed to select NOR by default
+    ];
   };
 in stdenv.mkDerivation {
   name = "flash_image";

@@ -1,0 +1,41 @@
+diff --git a/arch/arm/mach-socfpga/include/mach/misc.h b/arch/arm/mach-socfpga/include/mach/misc.h
+index 8460acb00d..d91d84319d 100644
+--- a/arch/arm/mach-socfpga/include/mach/misc.h
++++ b/arch/arm/mach-socfpga/include/mach/misc.h
+@@ -27,6 +27,8 @@ static inline void socfpga_fpga_add(void *fpga_desc) {}
+ void socfpga_sdram_remap_zero(void);
+ static inline bool socfpga_is_booting_from_fpga(void)
+ {
++	// hardcoded for this scenario
++	return true;
+ 	if ((__image_copy_start >= (char *)SOCFPGA_FPGA_SLAVES_ADDRESS) &&
+ 	    (__image_copy_start < (char *)SOCFPGA_STM_ADDRESS))
+ 		return true;
+diff --git a/arch/arm/mach-socfpga/spl_gen5.c b/arch/arm/mach-socfpga/spl_gen5.c
+index 287fbd1713..9dda6b0004 100644
+--- a/arch/arm/mach-socfpga/spl_gen5.c
++++ b/arch/arm/mach-socfpga/spl_gen5.c
+@@ -31,6 +31,9 @@ DECLARE_GLOBAL_DATA_PTR;
+ 
+ u32 spl_boot_device(void)
+ {
++	// hardcoded for this scenario
++	return BOOT_DEVICE_NOR;
++
+ 	const u32 bsel = readl(socfpga_get_sysmgr_addr() +
+ 			       SYSMGR_GEN5_BOOTINFO);
+ 
+diff --git a/include/configs/socfpga_de10_nano.h b/include/configs/socfpga_de10_nano.h
+index dfc22cf6e2..9ba9783cf3 100644
+--- a/include/configs/socfpga_de10_nano.h
++++ b/include/configs/socfpga_de10_nano.h
+@@ -10,6 +10,9 @@
+ /* Memory configurations */
+ #define PHYS_SDRAM_1_SIZE		0x40000000	/* 1GiB */
+ 
++/* Configuration NOR flash access */
++#define CFG_SYS_UBOOT_BASE		0xC1740000  /* 7MiB + 256KiB */
++
+ /* The rest of the configuration is shared */
+ #include <configs/socfpga_common.h>
+ 
