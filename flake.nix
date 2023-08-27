@@ -22,7 +22,7 @@
       { inherit pkgs flakeInputs pleaseKeepMyInputs; };
 
     packages."${system}" = {
-      inherit (pkgs) design;
+      inherit (pkgs) design bootloader;
     };
 
     nixosConfigurations.de10-nano = let
