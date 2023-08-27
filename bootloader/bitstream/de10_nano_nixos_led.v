@@ -106,7 +106,6 @@ module de10_nano_nixos_led(
 //  REG/WIRE declarations
 //=======================================================
 wire hps_fpga_reset_n;
-wire     [1: 0]     fpga_debounced_buttons;
 wire     [6: 0]     fpga_led_internal;
 wire     [2: 0]     hps_reset_req;
 wire                hps_cold_reset;
@@ -117,7 +116,7 @@ wire                fpga_clk_50;
 // connection of internal logics
 assign LED[7: 1] = fpga_led_internal;
 assign fpga_clk_50 = FPGA_CLK1_50;
-assign stm_hw_events = {{15{1'b0}}, SW, fpga_led_internal, fpga_debounced_buttons};
+assign stm_hw_events = {{15{1'b0}}, SW, fpga_led_internal, 2'b0};
 
 
 
@@ -203,28 +202,17 @@ soc_system u0(
                .hps_0_hps_io_hps_io_gpio_inst_GPIO61(HPS_GSENSOR_INT),      //                               .hps_io_gpio_inst_GPIO61
                //FPGA Partion
                .led_pio_external_connection_export(fpga_led_internal),      //    led_pio_external_connection.export
-               .dipsw_pio_external_connection_export(SW),                   //  dipsw_pio_external_connection.export
-               .button_pio_external_connection_export(fpga_debounced_buttons),
-                                                                            // button_pio_external_connection.export
                .hps_0_h2f_reset_reset_n(hps_fpga_reset_n),                  //                hps_0_h2f_reset.reset_n
                .hps_0_f2h_cold_reset_req_reset_n(~hps_cold_reset),          //       hps_0_f2h_cold_reset_req.reset_n
                .hps_0_f2h_debug_reset_req_reset_n(~hps_debug_reset),        //      hps_0_f2h_debug_reset_req.reset_n
                .hps_0_f2h_stm_hw_events_stm_hwevents(stm_hw_events),        //        hps_0_f2h_stm_hw_events.stm_hwevents
                .hps_0_f2h_warm_reset_req_reset_n(~hps_warm_reset),          //       hps_0_f2h_warm_reset_req.reset_n
 
+               // on chip memory is always ready
+               .hps_0_f2h_boot_from_fpga_boot_from_fpga_ready(1'b1),
+               .hps_0_f2h_boot_from_fpga_boot_from_fpga_on_failure(1'b1),
            );
 
-// Debounce logic to clean out glitches within 1ms
-debounce debounce_inst(
-             .clk(fpga_clk_50),
-             .reset_n(hps_fpga_reset_n),
-             .data_in(KEY),
-             .data_out(fpga_debounced_buttons)
-         );
-defparam debounce_inst.WIDTH = 2;
-defparam debounce_inst.POLARITY = "LOW";
-defparam debounce_inst.TIMEOUT = 50000;               // at 50Mhz this is a debounce time of 1ms
-defparam debounce_inst.TIMEOUT_WIDTH = 16;            // ceil(log2(TIMEOUT))
 
 // Source/Probe megawizard instance
 hps_reset hps_reset_inst(

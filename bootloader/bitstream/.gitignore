@@ -12,6 +12,7 @@ soc_system/
 *.jdi
 *.pin
 *.sof
+*.pof
 *.txt
 *.sld
 *.csv
