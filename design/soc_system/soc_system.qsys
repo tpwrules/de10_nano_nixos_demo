@@ -964,7 +964,7 @@
   <parameter name="resetValue" value="127" />
   <parameter name="simDoTestBenchWiring" value="false" />
   <parameter name="simDrivenValue" value="0" />
-  <parameter name="width" value="7" />
+  <parameter name="width" value="8" />
  </module>
  <module
    name="mm_bridge_0"

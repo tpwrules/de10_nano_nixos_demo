@@ -99,6 +99,7 @@
   in with pkgs; [
     dtc
     demo
+    python3
   ];
 
   # save space and compilation time. might revise?
